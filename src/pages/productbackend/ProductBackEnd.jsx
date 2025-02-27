@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from 'react-loading';
+import axios from "axios";
+
+
 
 
 
@@ -9,9 +12,6 @@ import Pagination from "./productbackendComps/Pagination";
 import Modal from "./productbackendComps/modal/Modal";
 import { handleInputValue } from "./productbackendComps/modal/modalSlice";
 import { getUpdateStatus } from "./updateSlice";
-
-
-
 
 
 function ProductBackEnd () {
@@ -26,8 +26,13 @@ function ProductBackEnd () {
 
 
   useEffect(() => {
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)dogfood\s*\=\s*([^;]*).*$)|^.*$/,"$1",);
+    
+    axios.defaults.headers.common['Authorization'] = token;
+
+
     dispatch(getAdminProducts());
-  }, [updateStatus])
+  }, [updateStatus, dispatch])
 
 
   

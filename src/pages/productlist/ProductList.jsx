@@ -13,6 +13,7 @@ import { addCart, allProducts, getProductList, productStatus } from "./productli
 
 
 import './ProductList.scss';
+import { getDetailIsOpen, openDetail, resetStatus } from "./productComps/productDetailSlice";
 
 
 
@@ -24,16 +25,18 @@ function ProductList () {
 
   const listSatus = useSelector(productStatus);
 
+  const detailIsOpen = useSelector(getDetailIsOpen);
+
 
   useEffect(() => {
-    dispatch(getProductList());
-  }, []);
+    listSatus === 'idle' && dispatch(getProductList());
+  }, [dispatch, listSatus]);
 
 
 
   return (
     <>
-      <div className='container'>
+      <div className={`container ${detailIsOpen ? 'd-none' : 'd-block'}`}>
         <table className="table align-middle">
           <thead className="text-center">
             <tr className="fs-3">
@@ -79,7 +82,11 @@ function ProductList () {
                       <Link 
                         type="button"
                         className="btn btn-outline-secondary"
-                        to={`../${product.id}`}>
+                        to={`${product.id}`}
+                        onClick={() => {
+                          dispatch(openDetail(true))
+                          dispatch(resetStatus())
+                        }}>
                           查看更多
                       </Link>
                       

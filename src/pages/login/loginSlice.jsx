@@ -18,9 +18,15 @@ export const userlogin = createAsyncThunk('login/userlogin', async (account) => 
 });
 
 
-const token = document.cookie.replace(/(?:(?:^|.*;\s*)dogfood\s*\=\s*([^;]*).*$)|^.*$/,"$1",);
-  
-axios.defaults.headers.common['Authorization'] = token;
+
+export const userlogout = createAsyncThunk('login/userlogout', async () => {
+  await axios.post(`${baseUrl}/v2/logout`);
+});
+
+
+export const checkislogin = createAsyncThunk('login/checkislogin', async () => {
+  await axios.post(`${baseUrl}/v2/api/user/check`);
+})
 
     
 
@@ -28,9 +34,7 @@ const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    userLogOut (state) {
-      state.status = 'idle';
-    }
+
   },
   extraReducers( builder ) {
     builder
@@ -47,6 +51,21 @@ const loginSlice = createSlice({
       })
       .addCase(userlogin.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.error.message;
+      })
+
+
+      .addCase(userlogout.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(userlogout.fulfilled, state => {
+        state.status = 'logout';
+      })
+
+
+      
+      .addCase(checkislogin.rejected, (state, action) => {
+        state.status = action.meta.rejectedWithValue;
         state.error = action.error.message;
       })
   }

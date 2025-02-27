@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import ReactLoading from 'react-loading';
 
 
-import { detailstatus, getOneProduct, oneProduct } from "./productDetailSlice";
+import { detailstatus, getOneProduct, oneProduct, openDetail, resetStatus } from "./productDetailSlice";
 import { addCart, productStatus } from "../productlistSlice";
 
 
@@ -18,20 +18,28 @@ function ProductDetail () {
   const screenStatus = useSelector(detailstatus);
 
 
-
+  
   const dispatch = useDispatch();
+
+  const go = useNavigate();
 
   const qtyRef = useRef(null);
 
   const { id } = useParams();
 
-
-  
   
   useEffect(() => {
-    dispatch(getOneProduct(id));
-  }, []);
+    screenStatus === 'idle' && dispatch(getOneProduct(id));
+  }, [dispatch, id, screenStatus]);
 
+
+  useEffect(() => {
+    screenStatus === 'succeded' ||  screenStatus === 'failed' ? (product.id !== id &&  (go('*') , dispatch(resetStatus()))) : null
+
+    id && dispatch(openDetail(true))
+
+  }, [product.id, id, go, screenStatus, dispatch])
+  
 
   return (
     <>
@@ -39,7 +47,8 @@ function ProductDetail () {
         <Link
           type="button"
           className="btn btn-primary fs-3 me-2"
-          to='../ProductList'
+          to='..'
+          onClick={() => dispatch(openDetail(false))}
         >
           上一頁
         </Link>

@@ -9,6 +9,7 @@ import Home from "./pages/home/Home";
 import Cart from "./pages/cart/Cart";
 import ProductDetail from "./pages/productlist/productComps/ProductDetail";
 import ProductBackEnd from "./pages/productbackend/ProductBackEnd";
+import NotFound from "./pages/NotFound";
 
 
 
@@ -33,11 +34,13 @@ const router = createHashRouter([
           },
           {
             path: 'ProductList',
-            element: <ProductList />
-          },
-          {
-            path: ':id',
-            element: <ProductDetail />
+            element: <ProductList />,
+            children: [
+              {
+                path: ':id',
+                element: <ProductDetail />
+              }
+            ]
           },
           {
             path: 'Cart',
@@ -50,6 +53,10 @@ const router = createHashRouter([
         ]
       }
     ]
+  },
+  {
+    path: '*',
+    element: <NotFound />
   }
 ]);
 
