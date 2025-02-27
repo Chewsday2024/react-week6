@@ -50,8 +50,6 @@ const productDetailSlice = createSlice({
       .addCase(getOneProduct.rejected, (state, action) => {
         state.status = 'failed';
 
-        console.log(  action)
-
         state.error = action.error.message;
       })
   }
